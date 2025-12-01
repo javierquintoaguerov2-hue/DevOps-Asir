@@ -24,7 +24,8 @@ pipeline {
             steps {
                 echo 'Desplegando en la máquina virtual...'
                 powershell """
-                Copy-Item project\\* \\\\192.168.1.36\\C$\\Deploy\\HTML -Recurse -Force
+                Copy-Item project\\* \\\\192.168.1.36\\C\$\\Deploy\\HTML -Recurse -Force
+
                 """
             }
         }
