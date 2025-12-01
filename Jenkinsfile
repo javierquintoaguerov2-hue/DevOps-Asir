@@ -6,28 +6,31 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/javierquintoagueroV2-hue/DevOps-Asir.git'
+                    url: 'https://github.com/javierquintoaguerov2-hue/DevOps-Asir.git'
             }
         }
 
         stage('Preparar proyecto') {
             steps {
                 echo 'Preparando archivos...'
-                powershell """
-                New-Item -ItemType Directory -Force -Path project
-                Copy-Item -Path index.html -Destination project -Force
+
+                sh """
+                    mkdir -p project
+                    cp index.html project/index.html
                 """
             }
         }
 
         stage('Desplegar en VM') {
             steps {
-                echo 'Desplegando en la máquina virtual...'
-                powershell """
-                Copy-Item project\\* \\\\192.168.1.36\\C\$\\Deploy\\HTML -Recurse -Force
+                echo 'Desplegando archivos en la máquina virtual...'
 
+                sh """
+                    smbclient //192.168.1.36/C\$ -U "TU_USUARIO" -c "mkdir Deploy/HTML"
+                    smbclient //192.168.1.36/C\$ -U "TU_USUARIO" -c "put project/index.html Deploy/HTML/index.html"
                 """
             }
         }
+
     }
 }
