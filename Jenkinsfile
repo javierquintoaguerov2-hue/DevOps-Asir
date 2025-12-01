@@ -21,16 +21,18 @@ pipeline {
             }
         }
 
-        stage('Desplegar en VM') {
+        stage('Validación') {
             steps {
-                echo 'Desplegando archivos en la máquina virtual...'
+                echo 'Validando proyecto...'
+            }
+        }
 
-                sh """
-                    smbclient //192.168.1.36/C\$ -U "QuintoV2" -c "mkdir Deploy/HTML"
-                    smbclient //192.168.1.36/C\$ -U "QuintoV2" -c "put project/index.html Deploy/HTML/index.html"
-                """
+        stage('Simulación de despliegue') {
+            steps {
+                echo 'Despliegue listo para enviarse a la máquina virtual (WinRM/SMB manual).'
             }
         }
 
     }
 }
+
