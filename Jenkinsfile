@@ -26,8 +26,8 @@ pipeline {
                 echo 'Desplegando archivos en la máquina virtual...'
 
                 sh """
-                    smbclient //192.168.1.36/C\$ -U "TU_USUARIO" -c "mkdir Deploy/HTML"
-                    smbclient //192.168.1.36/C\$ -U "TU_USUARIO" -c "put project/index.html Deploy/HTML/index.html"
+                    smbclient //192.168.1.36/C\$ -U "QuintoV2" -c "mkdir Deploy/HTML"
+                    smbclient //192.168.1.36/C\$ -U "QuintoV2" -c "put project/index.html Deploy/HTML/index.html"
                 """
             }
         }
