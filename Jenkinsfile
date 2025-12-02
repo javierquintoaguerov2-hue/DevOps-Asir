@@ -1,16 +1,12 @@
 pipeline {
     agent any
 
-    environment {
-        REMOTE_IP = "192.168.1.36"
-        REMOTE_SHARE = "\\\\192.168.1.36\\DevOpsHTML"
-    }
-
     stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/javierquintoaguerov2-hue/DevOps-Asir.git'
+                git branch: 'main',
+                    url: 'https://github.com/javierquintoaguerov2-hue/DevOps-Asir.git'
             }
         }
 
@@ -18,37 +14,34 @@ pipeline {
             steps {
                 echo "Preparando archivos..."
                 sh '''
-                    mkdir -p project
+                    rm -rf project
+                    mkdir project
                     cp index.html project/index.html
                 '''
             }
         }
 
-        stage('Validación') {
+        stage('Desplegar en VM (SMB)') {
             steps {
-                echo "Validando proyecto..."
-            }
-        }
+                echo "Desplegando archivo en la máquina virtual con SMB..."
 
-        stage('Desplegar en VM') {
-            steps {
-                echo "Desplegando en la máquina virtual por SMB..."
-
-                withCredentials([usernamePassword(credentialsId: 'smb-credenciales',
-                                                 usernameVariable: 'USER',
-                                                 passwordVariable: 'PASS')]) {
-
-                    sh '''
-                        echo "Montando recurso SMB..."
-
-                        # Montar conexión SMB con usuario y contraseña
-                        smbclient //192.168.1.36/DevOpsHTML $PASS -U $USER -c "put project/index.html index.html"
-
-                        echo "Archivo desplegado correctamente en la VM."
-                    '''
-                }
+                sh '''
+                    smbclient //192.168.1.36/DevOpsHTML \
+                        -U Quinto%9899Jq \
+                        -c "put project/index.html index.html"
+                '''
             }
         }
     }
+
+    post {
+        success {
+            echo "✔ Despliegue completado correctamente."
+        }
+        failure {
+            echo "❌ Error durante el despliegue."
+        }
+    }
 }
+
 
